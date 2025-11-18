@@ -1,0 +1,832 @@
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #121212;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #1e1e1e;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.header-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 100;
+  animation: fadeInControls 1.2s ease-out;
+}
+
+@keyframes fadeInControls {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    padding-bottom: 80px;
+  }
+
+  .header-controls {
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    padding: 15px;
+  }
+
+  .container {
+    padding: 15px;
+  }
+
+  .filter-group {
+    grid-template-columns: 1fr;
+  }
+
+  #results {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .matches-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    padding: 8px;
+  }
+
+  .input-section {
+    flex-direction: column;
+    width: calc(100% - 30px);
+    margin: 0 auto 20px;
+    padding: 10px;
+  }
+
+  .matches-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .values-row {
+    gap: 5px;
+  }
+
+  .value-box {
+    padding: 5px;
+    font-size: 0.85em;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  .nav-btn {
+    width: 45%;
+    text-align: center;
+  }
+
+  .refresh-button {
+    width: 45%;
+  }
+
+  #artistInput {
+    width: calc(100% - 40px);
+    margin: 0;
+  }
+
+  #guessButton {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .guess-box {
+    padding: 15px;
+  }
+  .match-card {
+    padding: 10px;
+    font-size: 0.8em;
+    min-width: 0;
+    margin: 2px;
+    background: #252525;
+  }
+
+  .match-card div {
+    font-size: 0.75em;
+    padding: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .match-card:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 480px) {
+  .matches-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.header-controls .nav-btn {
+  margin: 0;
+}
+
+.refresh-button {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.refresh-button:hover {
+  background: #444;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.refresh-button:active {
+  transform: scale(0.95);
+}
+
+.refresh-button svg {
+  color: #4CAF50;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.refresh-button.spinning svg {
+  animation: spin 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg) scale(0.8); }
+  100% { transform: rotate(360deg); }
+}
+
+h1 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.filter-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+  background: #252525;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.genre-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.genre-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.genre-btn.active {
+  background: #4CAF50;
+}
+
+.filter-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+input, select {
+  padding: 12px 15px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #2a2a2a;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+select {
+  cursor: pointer;
+}
+
+input:focus, select:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+button {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.clear-btn {
+  background: #555;
+}
+
+.clear-btn:hover {
+  background: #666;
+}
+
+#results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.artist-card {
+  background: #252525;
+  padding: 20px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 1px solid #333;
+}
+
+.artist-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  border-color: #4CAF50;
+}
+
+.artist-card h3 {
+  margin: 0 0 15px 0;
+  color: #4CAF50;
+  font-size: 1.3em;
+}
+
+.artist-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.artist-details span {
+  background: #1e1e1e;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artist-details span strong:first-child {
+  font-weight: 700;
+}
+
+.artist-details span:has(strong:contains("Genre")) {
+  font-weight: 600;
+}
+
+.legend {
+  margin-top: 30px;
+  padding: 20px;
+  background: #252525;
+  border-radius: 15px;
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #4CAF50;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 5px 0;
+}
+
+.color-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+}
+
+.empty-results {
+  text-align: center;
+  padding: 40px;
+  background: #252525;
+  border-radius: 15px;
+  grid-column: 1 / -1;
+}
+
+.nav-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.nav-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #333;
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: #444;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.guess-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.attribute-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.attribute-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.attribute-group label {
+  min-width: 100px;
+}
+
+.check-btn {
+  min-width: 80px;
+}
+
+.guess-box {
+  background: rgba(30, 30, 30, 0.8);
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  backdrop-filter: blur(5px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
+}
+
+.guess-box.fade-out {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95) rotate(-1deg);
+  filter: brightness(0.5);
+}
+
+.guess-number {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.artist-name {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.values-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stat-item {
+  text-align: center;
+  font-size: 0.9em;
+  color: #888;
+}
+
+.value-box {
+  min-height: 50px;
+  padding: 8px;
+  text-align: center;
+  border-radius: 10px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  background: #1c1c1c;
+  color: #fff;
+  border-color: #1c1c1c;
+}
+
+.value-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  filter: brightness(1.2);
+}
+
+.value-box.green {
+  background: #159643;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.value-box.yellow {
+  background: #b19600;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.value-box > * {
+  position: relative;
+}
+
+.arrow-controls {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  justify-content: center;
+}
+
+.arrow-btn {
+  padding: 2px 8px;
+  background: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.arrow-btn:hover {
+  background: #444;
+  transform: translateY(-1px);
+}
+
+.arrow-btn.active {
+  background: linear-gradient(45deg, #FFA000, #FFB74D);
+  color: #000;
+  box-shadow: 0 2px 4px rgba(255, 160, 0, 0.3);
+}
+
+.input-section {
+  display: flex;
+  gap: 10px;
+  margin: 0 auto 20px;
+  background: rgba(40, 40, 40, 0.5);
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 800px;
+}
+
+.input-section.slide-down {
+  transform: translateY(20px);
+  opacity: 0.6;
+}
+
+.input-section.slide-up {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#artistInput {
+  flex: 1;
+  padding: 12px 20px;
+  border: 2px solid rgba(76, 175, 80, 0.3);
+  border-radius: 12px;
+  font-size: 16px;
+  background: rgba(42, 42, 42, 0.8);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+#artistInput:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  outline: none;
+}
+
+.guess-attributes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.guess-attributes button {
+  padding: 8px;
+  background: #333;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.guess-attributes button:hover {
+  background: #444;
+}
+
+#findMatches {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+#findMatches:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+#findMatches.clicked {
+  transform: scale(0.98);
+  filter: brightness(0.9);
+}
+
+#findMatches::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+#findMatches:hover::after {
+  left: 100%;
+}
+
+#possibleMatches {
+  margin-top: 20px;
+  transition: opacity 0.5s ease-out;
+}
+
+#possibleMatches.fade-out {
+  opacity: 0;
+}
+
+.matches-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.match-card {
+  background: #333;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.match-card strong {
+  color: #4CAF50;
+}
+
+.game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(165deg, #1e1e1e, #252525);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#guessButton {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+#guessButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+#guessButton:active {
+  transform: translateY(1px);
+}
+
+#guessButton::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+#guessButton:hover::after {
+  left: 100%;
+}
+
+.guess-number {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #888;
+}
+
+.artist-name {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.suggestions {
+  margin-top: 20px;
+}
+
+.matches-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.match-card {
+  background: #333;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.match-card strong {
+  color: #4CAF50;
+}
+
+.back-to-top-btn {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 30px;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  background: transparent;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  animation: fadeInArrow 0.3s ease-out forwards;
+}
+
+@keyframes fadeInArrow {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.back-to-top-btn:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.back-to-top-btn.visible {
+  display: flex;
+  opacity: 1;
+}
+
+.back-to-top-btn.fade-out {
+  animation: fadeOutArrow 0.3s ease-out forwards;
+}
+
+@keyframes fadeOutArrow {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+.best-guess {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 10px;
+  border: 1px solid #4CAF50;
+}
+
+.match-card.recommended {
+  background: #2a2a2a;
+  border: 1px solid #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+}
